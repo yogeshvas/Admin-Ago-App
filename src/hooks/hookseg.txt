@@ -1,0 +1,34 @@
+// hooks.js
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getData, postData, putData, deleteData } from './api';
+
+export const useGetData = () => {
+  return useQuery(['data'], getData);
+};
+
+export const usePostData = () => {
+  const queryClient = useQueryClient();
+  return useMutation(postData, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['data']);
+    },
+  });
+};
+
+export const usePutData = (id) => {
+  const queryClient = useQueryClient();
+  return useMutation((data) => putData(id, data), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['data']);
+    },
+  });
+};
+
+export const useDeleteData = (id) => {
+  const queryClient = useQueryClient();
+  return useMutation(() => deleteData(id), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['data']);
+    },
+  });
+};
